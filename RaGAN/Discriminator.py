@@ -23,4 +23,3 @@ class Discriminator(nn.Module):
 
         x2 = self.dense_local_branch(x2.view(-1,2048))
         return self.neck(torch.cat([x1,x2],1))
-d=Discriminator()
