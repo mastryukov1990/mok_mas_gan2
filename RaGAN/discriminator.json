@@ -209,7 +209,7 @@
     },
     "dense_local_branch":{"linear":{
                         "in_features":8192,
-                        "out_features":8192,
+                        "out_features":8192
                       },
                      "norm_act":{
                          "activation": {
