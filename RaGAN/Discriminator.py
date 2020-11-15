@@ -1,7 +1,7 @@
 from torch import nn
 import torch
-from . import Conv2dBlock
-from . import Dense2DBlock
+from .Conv2dBlock import Conv2dBlock
+from .Dense2DBlock import Dense2DBlock
 
 
 class Discriminator(nn.Module):
