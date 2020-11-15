@@ -1,0 +1,21 @@
+{
+  "transpose" : false,
+  "conv" : {
+    "in_channels" : 3,
+    "out_channels" : 64,
+    "kernel_size" : 3,
+    "padding" : 1
+  },
+  "norm_act" : {
+    "norm": {
+      "type": "InstanceNorm2d",
+      "params": {
+        "num_features": 64
+      }
+    },
+    "activation": {
+      "type": "LeakyReLU",
+      "params": {}
+    }
+  }
+}

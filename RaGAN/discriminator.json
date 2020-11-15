@@ -1,0 +1,226 @@
+{
+    "global_branch":[
+        {
+      "conv": {
+        "in_channels": 3,
+        "out_channels": 64,
+        "kernel_size": 5,
+        "stride": 2
+      },
+      "norm_act": {
+        "norm": {
+          "type": "BatchNorm2d",
+          "params": {
+            "num_features": 64
+          }
+        },
+        "activation": {
+          "type": "ReLU"
+        }
+      }
+        },
+        {
+      "conv": {
+        "in_channels": 64,
+        "out_channels": 128,
+        "kernel_size": 3,
+        "stride": 2
+      },
+      "norm_act": {
+        "norm": {
+          "type": "BatchNorm2d",
+          "params": {
+            "num_features": 128
+          }
+        },
+        "activation": {
+          "type": "LeakyReLU"
+        }
+      }
+    },
+    {
+      "conv": {
+        "in_channels": 128,
+        "out_channels": 256,
+        "kernel_size": 3,
+        "stride": 2
+      },
+      "norm_act": {
+        "norm": {
+          "type": "BatchNorm2d",
+          "params": {
+            "num_features": 256
+          }
+        },
+        "activation": {
+          "type": "LeakyReLU"
+        }
+      }
+    },
+    {
+      "conv": {
+        "in_channels": 256,
+        "out_channels": 512,
+        "kernel_size": 3,
+        "stride": 2
+      },
+      "norm_act": {
+        "norm": {
+          "type": "BatchNorm2d",
+          "params": {
+            "num_features": 512
+          }
+        },
+        "activation": {
+          "type": "LeakyReLU"
+        }
+      }
+    },
+
+    {
+      "conv": {
+        "in_channels": 512,
+        "out_channels": 512,
+        "kernel_size": 3,
+        "stride": 2
+      },
+      "norm_act": {
+        "norm": {
+          "type": "BatchNorm2d",
+          "params": {
+            "num_features": 512
+          }
+        },
+        "activation": {
+          "type": "LeakyReLU"
+        }
+      }
+    }
+    ],
+    "left_dense":{"linear":{"in_features":2048,"out_features":512}},
+    "local_branch":[
+        {
+      "conv": {
+        "in_channels": 3,
+        "out_channels": 64,
+        "kernel_size": 5,
+        "stride": 2
+      },
+      "norm_act": {
+        "norm": {
+          "type": "BatchNorm2d",
+          "params": {
+            "num_features": 64
+          }
+        },
+        "activation": {
+          "type": "ReLU"
+        }
+      }
+        },
+        {
+      "conv": {
+        "in_channels": 64,
+        "out_channels": 128,
+        "kernel_size": 3,
+        "stride": 2
+      },
+      "norm_act": {
+        "norm": {
+          "type": "BatchNorm2d",
+          "params": {
+            "num_features": 128
+          }
+        },
+        "activation": {
+          "type": "LeakyReLU"
+        }
+      }
+    },
+    {
+      "conv": {
+        "in_channels": 128,
+        "out_channels": 256,
+        "kernel_size": 3,
+        "stride": 2
+      },
+      "norm_act": {
+        "norm": {
+          "type": "BatchNorm2d",
+          "params": {
+            "num_features": 256
+          }
+        },
+        "activation": {
+          "type": "LeakyReLU"
+        }
+      }
+    },
+    {
+      "conv": {
+        "in_channels": 256,
+        "out_channels": 512,
+        "kernel_size": 3,
+        "stride": 2
+      },
+      "norm_act": {
+        "norm": {
+          "type": "BatchNorm2d",
+          "params": {
+            "num_features": 512
+          }
+        },
+        "activation": {
+          "type": "LeakyReLU"
+        }
+      }
+    },
+
+    {
+      "conv": {
+        "in_channels": 512,
+        "out_channels": 512,
+        "kernel_size": 3,
+        "stride": 2
+      },
+      "norm_act": {
+        "norm": {
+          "type": "BatchNorm2d",
+          "params": {
+            "num_features": 512
+          }
+        },
+        "activation": {
+          "type": "LeakyReLU"
+        }
+      }
+    }
+    ],
+
+    "dense_global_branch":{"linear":{
+                        "in_features":4096,
+                        "out_features":4096
+                      },
+                     "norm_act":{
+                         "activation": {
+                             "type": "LeakyReLU"
+                          }
+                      }
+    },
+    "dense_local_branch":{"linear":{
+                        "in_features":4096,
+                        "out_features":4096
+                      },
+                     "norm_act":{
+                         "activation": {
+                             "type": "LeakyReLU"
+                          }
+                      }
+
+    },
+    "neck":{
+        "linear":{
+            "in_features":16392, "out_features":1
+        }
+    }
+}
