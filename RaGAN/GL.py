@@ -4,6 +4,7 @@ import numpy as np
 from torchvision.models import vgg19
 import torch
 
+
 class GeometricLoss(Loss):
     def __init__(self, *args, **kwargs):
         super(GeometricLoss, self).__init__()
