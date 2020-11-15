@@ -1,5 +1,5 @@
 from torch import nn
-from . import NormActBlock
+from .NormActBlock import NormActBlock
 
 class Dense2DBlock(nn.Module):
   def __init__(self, block_params):
