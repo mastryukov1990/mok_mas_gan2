@@ -40,12 +40,8 @@ def show_hiden(net, img):
 def give_net(net, t_num, *args, **kwargs):
     num = 0
     num_layers = 0
-    new_net = []
-    mod = nn.Sequential()
-
     for layer in net:
         num_layers += 1
-        layer
         if isinstance(layer, nn.ReLU):
             num += 1
             if num == t_num:
