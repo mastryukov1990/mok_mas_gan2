@@ -23,7 +23,7 @@ class Discriminator(nn.Module):
 
         x2 = self.local_branch(x)
         x2 = self.dense_local_branch(x2.view(x2.shape[0], -1))
-        print(torch.cat([x1, x2], 1).shape)
+        # print(torch.cat([x1,x2],1).shape)
         y = self.neck(torch.cat([x1, x2], 1))
         if sig:
             y = self.last_act(y)
