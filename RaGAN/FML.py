@@ -18,5 +18,6 @@ class FML(Loss):
         error = torch.zeros([1]).to(DEVICE)
         for block in net:
             x, y = block(x), block(y)
-            error += FML.norm1(x, y)
-        return error
+            # print(x.size()[1])
+            error += FML.norm1(x, y) / x.size()[1]
+        return error, x, y
