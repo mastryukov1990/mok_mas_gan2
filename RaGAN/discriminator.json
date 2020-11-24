@@ -116,7 +116,6 @@
       }
     }
     ],
-    "left_dense":{"linear":{"in_features":2048,"out_features":512}},
     "local_branch":[
         {
       "conv": {
@@ -194,27 +193,7 @@
         }
       }
     },
-
     {
-      "conv": {
-        "in_channels": 512,
-        "out_channels": 512,
-        "kernel_size": 3,
-        "stride": 2
-      },
-      "norm_act": {
-        "norm": {
-          "type": "BatchNorm2d",
-          "params": {
-            "num_features": 512
-          }
-        },
-        "activation": {
-          "type": "LeakyReLU"
-        }
-      }
-    },
-     {
       "conv": {
         "in_channels": 512,
         "out_channels": 512,
@@ -236,7 +215,7 @@
     ],
 
     "dense_global_branch":{"linear":{
-                        "in_features":2048,
+                        "in_features":8192,
                         "out_features":512
                       },
                      "norm_act":{
@@ -246,7 +225,7 @@
                       }
     },
     "dense_local_branch":{"linear":{
-                        "in_features":2048,
+                        "in_features":8192,
                         "out_features":512
                       },
                      "norm_act":{
