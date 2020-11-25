@@ -215,7 +215,7 @@
     ],
 
     "dense_global_branch":{"linear":{
-                        "in_features":8192,
+                        "in_features":2048,
                         "out_features":512
                       },
                      "norm_act":{
@@ -225,7 +225,7 @@
                       }
     },
     "dense_local_branch":{"linear":{
-                        "in_features":8192,
+                        "in_features":2048,
                         "out_features":512
                       },
                      "norm_act":{
