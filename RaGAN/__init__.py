@@ -1,6 +1,6 @@
-__all__ = ['AL', 'GAL','DAL','Conv2dBlock', 'DMFB', 'Dense2DBlock', 'Discriminator',
-        'FML', 'FinalLoss', 'GL', 'Generator', 'Initializations', 'JsonDataLoader',
-        'Loss', 'NormActBlock', 'SGRL', 'conf', 'utils']
+__all__ = [ 'GAL', 'DAL', 'Conv2dBlock', 'DMFB', 'Dense2DBlock', 'Discriminator',
+           'FML', 'FinalLoss', 'GL', 'Generator', 'Initializations', 'JsonDataLoader',
+           'Loss', 'NormActBlock', 'SGRL', 'conf', 'utils']
 
 from .Conv2dBlock import Conv2dBlock
 from .DMFB import DMFB
