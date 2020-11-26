@@ -9,7 +9,7 @@ from torch import nn
 from torch.nn import functional as F
 from torch.autograd import Function
 
-#from .op import FusedLeakyReLU, fused_leaky_relu, upfirdn2d
+# from .op import FusedLeakyReLU, fused_leaky_relu, upfirdn2d
 
 # if you decide not to use NVIDIA code for CUDA, use .simple_op
 # implementation of upfirdn2d and fused_leaky_relu
@@ -25,7 +25,7 @@ class PixelNorm(nn.Module):
     def __init__(self):
         super(PixelNorm, self).__init__()
 
-    def forward(self, x, **kwargs):
+    def forward(self, x):
         return x * torch.rsqrt(torch.mean(x ** 2, dim=1, keepdim=True) + kEPSILON)
 
 
@@ -62,7 +62,7 @@ class NormalConv2d(nn.Module):
         else:
             self.bias = None
 
-    def forward(self, x, **kwargs):
+    def forward(self, x):
         return F.conv2d(
             x,
             self.weight * self.norm,
@@ -93,7 +93,7 @@ class NormalLinear(nn.Module):
         self.lr_mul = lr_mul
         pass
 
-    def forward(self, x, **kwargs):
+    def forward(self, x):
         if self.activation == 'fused_lrelu' or self.activation:
             out = F.linear(x, self.weight * self.scale)
             out = fused_leaky_relu(out, self.bias * self.lr_mul)
@@ -106,17 +106,6 @@ class NormalLinear(nn.Module):
         return (
             f'{self.__class__.__name__}({self.weight.shape[1], self.weight.shape[0]})'
         )
-
-
-class ScaledLeakyReLU(nn.Module):
-    def __init__(self, negative_slope=0.2):
-        super(ScaledLeakyReLU, self).__init__()
-
-        self.negative_slope = negative_slope
-
-    def forward(self, x, **kwargs):
-        out = F.leaky_relu(x, negative_slope=self.negative_slope)
-        return out * math.sqrt(2)
 
 
 class ModulatedConv2d(nn.Module):
