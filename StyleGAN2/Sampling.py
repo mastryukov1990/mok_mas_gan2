@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from .op import upfirdn2d
+from .simple_op import upfirdn2d
 
 
 def make_kernel(k):
