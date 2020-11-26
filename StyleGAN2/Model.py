@@ -208,7 +208,7 @@ class NoiseInjector(nn.Module):
 
     def __repr__(self):
         return (
-            f'{self.__class__.name}'
+            f'{self.__class__.__name__}'
         )
 
 
@@ -327,7 +327,7 @@ class Generator(nn.Module):
             )
 
         self.styler = nn.Sequential(*mlp_layers)
-        self.channels = {l_number ** 2: self.__nf(l_number, fmap_base, fmap_decay, fmap_min, fmap_max) for l_number in
+        self.channels = {2 ** l_number: self.__nf(l_number, fmap_base, fmap_decay, fmap_min, fmap_max) for l_number in
                          range(start_res_log, resol_log + 1)}
 
         self.input = ConstantInput(self.channels[start_resolution])
