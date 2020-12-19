@@ -20,8 +20,10 @@ class Discriminator(nn.Module):
 
         x1 = self.global_branch(gt)
         x1 = self.dense_global_branch(x1.view(x1.shape[0], -1))
+
         x2 = self.local_branch(masked)
         x2 = self.dense_local_branch(x2.view(x2.shape[0], -1))
+
         y = self.neck(torch.cat([x1, x2], 1))
         if sig:
             y = self.last_act(y)

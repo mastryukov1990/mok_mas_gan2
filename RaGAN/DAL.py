@@ -19,4 +19,3 @@ class DAL(Loss):
         Dfr = self.Dra(D_x[label == 0], D_x[label == 1]) * self.a
         # print(Drf.size())
         return - torch.mean(torch.log(Drf + 10 ** -10)) - torch.mean(torch.log(1. - Dfr + 10 ** -10))
-
