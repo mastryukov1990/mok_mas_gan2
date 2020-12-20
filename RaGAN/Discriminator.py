@@ -16,14 +16,12 @@ class Discriminator(nn.Module):
         self.neck = nn.Sequential(*[Dense2DBlock(params["neck"])])
         self.last_act = nn.Sigmoid()
 
-    def forward(self, x, sig=True, **kwargs):
-        x1 = self.global_branch(x)
-        # print(x1.shape)
-        x1 = self.dense_global_branch(x1.view(x1.shape[0], -1))
+    def forward(self, gt, masked, sig=True, **kwargs):
 
-        x2 = self.local_branch(x)
+        x1 = self.global_branch(gt)
+        x1 = self.dense_global_branch(x1.view(x1.shape[0], -1))
+        x2 = self.local_branch(masked)
         x2 = self.dense_local_branch(x2.view(x2.shape[0], -1))
-        print(torch.cat([x1, x2], 1).shape)
         y = self.neck(torch.cat([x1, x2], 1))
         if sig:
             y = self.last_act(y)

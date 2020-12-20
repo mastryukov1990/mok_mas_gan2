@@ -3,6 +3,7 @@ from .utils import give_net, give_blocks
 import numpy as np
 from torchvision.models import vgg19
 import torch
+from .conf import DEVICE
 
 
 class FML(Loss):
@@ -14,8 +15,9 @@ class FML(Loss):
         return torch.mean(abs(x - y))
 
     def forward(self, x, y, net, *args, **kwargs):
-        error = torch.zeros([1])
+        error = torch.zeros([1]).to(DEVICE)
         for block in net:
             x, y = block(x), block(y)
-            error += FML.norm1(x, y)
-        return error
+            # print(x.size()[1])
+            error += FML.norm1(x, y) / x.size()[1]
+        return error, x, y
