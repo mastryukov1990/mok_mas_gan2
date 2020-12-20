@@ -20,7 +20,7 @@ class SGRL(Loss):
         inp = inp.view(-1, 3, 128, 128)  # view to need size
         tar = tar.view(-1, 3, 128, 128)  # view to need size
 
-        Mror = (inp - tar).mean(1).view(-1, 1, 128, 128)  # MSE - target shape [-1,1,H, W]
+        Mror = ((inp - tar)**2).mean(1).view(-1, 1, 128, 128)  # MSE - target shape [-1,1,H, W]
         Mror_min = torch.min(torch.min(Mror, 2)[0], 2)[0].view(-1, 1, 1, 1)  # min for evry image
         Mror_max = torch.max(torch.max(Mror, 2)[0], 2)[0].view(-1, 1, 1, 1)  # max for evry image
 
