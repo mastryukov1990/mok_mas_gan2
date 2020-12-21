@@ -9,7 +9,7 @@ from .conf import DEVICE
 class GeometricLoss(Loss):
     def __init__(self, *args, **kwargs):
         super(GeometricLoss, self).__init__()
-        self.net = give_net(vgg19(True).features[:12], 5).to(DEVICE)
+        self.net = give_net(vgg19(True).features[:], 12).to(DEVICE)
 
     def forward(self, output, target, *args, **kwargs):
         output = self.net(output)
