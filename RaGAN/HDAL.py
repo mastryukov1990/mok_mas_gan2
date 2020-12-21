@@ -3,7 +3,7 @@ from torch import mean as mn
 from .Loss import Loss
 
 
-class HGAL(Loss):
+class HDAL(Loss):
     def __init__(self):
         super(HGAL, self).__init__()
 
