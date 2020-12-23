@@ -19,4 +19,4 @@ class GAL(Loss):
         Drf = self.Dra(D_x[label == 1], D_x[label == 0]) * self.a
         Dfr = self.Dra(D_x[label == 0], D_x[label == 1]) * self.a
         # print(Drf.size())
-        return -torch.mean(torch.log(Dfr + 10 ** -10)) - torch.mean(torch.log(1-Drf + 10 ** -10))
+        return -torch.mean(torch.log(Dfr + 10 ** -10)) - torch.mean(torch.log(1.-Drf + 10 ** -10))
