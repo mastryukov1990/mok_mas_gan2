@@ -9,6 +9,12 @@ from torch import nn
 from torch.nn import functional as F
 from torch.autograd import Function
 
+<<<<<<< HEAD
+from .op import FusedLeakyReLU, fused_leaky_relu, upfirdn2d
+from .Sampling import make_kernel, Upsampler, Downsampler
+
+kEpsilon = 1e-8
+=======
 # from .op import FusedLeakyReLU, fused_leaky_relu, upfirdn2d
 
 # if you decide not to use NVIDIA code for CUDA, use .simple_op
@@ -19,12 +25,26 @@ from .simple_op import FusedLeakyReLU, fused_leaky_relu, upfirdn2d
 from .Sampling import make_kernel, Upsampler, Downsampler
 
 kEPSILON = 1e-8
+>>>>>>> main
 
 
 class PixelNorm(nn.Module):
     def __init__(self):
         super(PixelNorm, self).__init__()
 
+<<<<<<< HEAD
+    def forward(self, x, **kwargs):
+        return x * torch.rsqrt(torch.mean(x ** 2, dim=1, keepdim=True) + kEpsilon)
+
+
+class Blur(nn.Module):
+    def __init__(self, kernel, pad, upsample_f=1):
+        super(Blur, self).__init__()
+        kernel = make_kernel(kernel)
+
+        if upsample_f > 1:
+            kernel = kernel * (upsample_f ** 2)
+=======
     def forward(self, x):
         return x * torch.rsqrt(torch.mean(x ** 2, dim=1, keepdim=True) + kEPSILON)
 
@@ -36,6 +56,7 @@ class Blur(nn.Module):
 
         if upsample_factor > 1:
             kernel = kernel * (upsample_factor ** 2)
+>>>>>>> main
 
         self.register_buffer("kernel", kernel)
         self.pad = pad
@@ -62,7 +83,11 @@ class NormalConv2d(nn.Module):
         else:
             self.bias = None
 
+<<<<<<< HEAD
+    def forward(self, x, **kwargs):
+=======
     def forward(self, x):
+>>>>>>> main
         return F.conv2d(
             x,
             self.weight * self.norm,
@@ -93,7 +118,11 @@ class NormalLinear(nn.Module):
         self.lr_mul = lr_mul
         pass
 
+<<<<<<< HEAD
+    def forward(self, x, **kwargs):
+=======
     def forward(self, x):
+>>>>>>> main
         if self.activation == 'fused_lrelu' or self.activation:
             out = F.linear(x, self.weight * self.scale)
             out = fused_leaky_relu(out, self.bias * self.lr_mul)
@@ -108,6 +137,20 @@ class NormalLinear(nn.Module):
         )
 
 
+<<<<<<< HEAD
+class ScaledLeakyReLU(nn.Module):
+    def __init__(self, negative_slope=0.2):
+        super(ScaledLeakyReLU, self).__init__()
+
+        self.negative_slope = negative_slope
+
+    def forward(self, x, **kwargs):
+        out = F.leaky_relu(x, negative_slope=self.negative_slope)
+        return out * math.sqrt(2)
+
+
+=======
+>>>>>>> main
 class ModulatedConv2d(nn.Module):
     def __init__(
             self,
@@ -130,7 +173,11 @@ class ModulatedConv2d(nn.Module):
         self.out_channels = out_channels
         self.upsample = upsample
         self.downsample = downsample
+<<<<<<< HEAD
+        self.eps = kEpsilon
+=======
         self.eps = kEPSILON
+>>>>>>> main
 
         fan_in = in_channels * kernel_size ** 2
         self.scale = 1 / math.sqrt(fan_in)
@@ -147,20 +194,32 @@ class ModulatedConv2d(nn.Module):
             pad = len(blur_kernel) - factor - kernel_size + 1
             pad0 = (pad + 1) // 2 + factor - 1
             pad1 = pad // 2 + 1
+<<<<<<< HEAD
+            self.blur = Blur(blur_kernel, pad=(pad0, pad1), upsample_f=factor)
+=======
             self.blur = Blur(blur_kernel, pad=(pad0, pad1), upsample_factor=factor)
+>>>>>>> main
         elif downsample:
             factor = 2
             pad = len(blur_kernel) - factor + kernel_size - 1
             pad0 = (pad + 1) // 2
             pad1 = pad // 2
+<<<<<<< HEAD
+            self.blur = Blur(blur_kernel, pad=(pad0, pad1), upsample_f=factor)
+=======
             self.blur = Blur(blur_kernel, pad=(pad0, pad1), upsample_factor=factor)
+>>>>>>> main
 
     def forward(self, x, style):
         batch, in_channels, in_h, in_w = x.shape
         style = self.modulation(style).view(batch, 1, in_channels, 1, 1)
         weight = self.scale * self.weight * style
         if self.demodulate:
+<<<<<<< HEAD
+            d = torch.rsqrt(weight.pow(2).sum(2, 3, 4) + kEpsilon)
+=======
             d = torch.rsqrt(weight.pow(2).sum(2, 3, 4) + kEPSILON)
+>>>>>>> main
             weight = weight * d.view(batch, self.out_channels, 1, 1, 1)
 
         weight = weight.view(batch * self.out_channels, in_channels, self.kernel_size, self.kernel_size)
@@ -194,9 +253,15 @@ class ModulatedConv2d(nn.Module):
         )
 
 
+<<<<<<< HEAD
+class NoiseInjection(nn.Module):
+    def __init__(self):
+        super(NoiseInjection, self).__init__()
+=======
 class NoiseInjector(nn.Module):
     def __init__(self):
         super(NoiseInjector, self).__init__()
+>>>>>>> main
         self.weight = nn.Parameter(torch.zeros(1))
 
     def forward(self, image, noise=None):
@@ -206,23 +271,37 @@ class NoiseInjector(nn.Module):
 
         return image + self.weight * noise
 
+<<<<<<< HEAD
+=======
     def __repr__(self):
         return (
             f'{self.__class__.__name__}'
         )
 
+>>>>>>> main
 
 class ConstantInput(nn.Module):
     def __init__(self, channels, size=4):
         super(ConstantInput, self).__init__()
         self.output = nn.Parameter(torch.randn(1, channels, size, size))
+<<<<<<< HEAD
+=======
         self.sz = size
+>>>>>>> main
 
     def forward(self, x):
         batch_size = x.shape[0]
         out = self.output.repeat(batch_size, 1, 1, 1)
         return out
 
+<<<<<<< HEAD
+
+class ToRGB(nn.Module):
+    def __init__(self, in_channels, style_dim, upsample=True, blur_kernel=[1, 3, 3, 1]):
+        super(ToRGB, self).__init__()
+        self.conv = ModulatedConv2d(in_channels, out_channels=3, kernel_size=1, style_dim=style_dim, demodulate=False)
+        self.bias = nn.Parameter(torch.zeros(1, 3, 3, 1))
+=======
     def __repr__(self):
         return (
             f'{self.__class__.__name__}({self.sz}, {self.sz})'
@@ -236,6 +315,7 @@ class ToRGB(nn.Module):
             blur_kernel = [1, 3, 3, 1]
         self.conv = ModulatedConv2d(in_channels, out_channels=3, kernel_size=1, style_dim=style_dim, demodulate=False)
         self.bias = nn.Parameter(torch.zeros(*blur_kernel))
+>>>>>>> main
         if upsample:
             self.upsampler = Upsampler(blur_kernel)
 
@@ -250,18 +330,28 @@ class ToRGB(nn.Module):
         return out
 
 
+<<<<<<< HEAD
+class StyledConv(nn.Module):
+=======
 class StyledConv2d(nn.Module):
+>>>>>>> main
     def __init__(self,
                  in_channels,
                  out_channels,
                  kernel_size,
                  style_dim,
                  upsample=False,
+<<<<<<< HEAD
+                 blur_kernel=[1, 3, 3, 1],
+                 demodulate=True):
+        super(StyledConv, self).__init__()
+=======
                  blur_kernel=None,
                  demodulate=True):
         super(StyledConv2d, self).__init__()
         if blur_kernel is None:
             blur_kernel = [1, 3, 3, 1]
+>>>>>>> main
         self.conv = ModulatedConv2d(
             in_channels,
             out_channels,
@@ -272,7 +362,11 @@ class StyledConv2d(nn.Module):
             demodulate=demodulate
         )
 
+<<<<<<< HEAD
+        self.noise = NoiseInjection()
+=======
         self.noise = NoiseInjector()
+>>>>>>> main
         self.activation = FusedLeakyReLU(channel=out_channels)
 
     def forward(self, x, style, noise=None):
@@ -287,7 +381,11 @@ class Generator(nn.Module):
                  resolution=1024,
                  style_dim=512,
                  mlp_no=8,
+<<<<<<< HEAD
+                 blur_kernel=[1, 3, 3, 1],
+=======
                  blur_kernel=None,
+>>>>>>> main
                  lr_mlp=0.01,
                  fmap_base=16 << 10,  # 2 ** 14
                  fmap_decay=1.0,
@@ -295,8 +393,11 @@ class Generator(nn.Module):
                  fmap_max=512,
                  start_resolution=4
                  ):
+<<<<<<< HEAD
+=======
         if blur_kernel is None:
             blur_kernel = [1, 3, 3, 1]
+>>>>>>> main
         resol_log = int(np.log2(resolution))
         start_res_log = int(np.log2(start_resolution))
         assert resolution == 2 ** resol_log and resolution >= 4
@@ -327,12 +428,20 @@ class Generator(nn.Module):
             )
 
         self.styler = nn.Sequential(*mlp_layers)
+<<<<<<< HEAD
+        self.channels = {l_number ** 2: self.__nf(l_number, fmap_base, fmap_decay, fmap_min, fmap_max) for l_number in
+                         range(start_res_log, resol_log + 1)}
+
+        self.input = ConstantInput(self.channels[start_resolution])
+        self.conv_1 = StyledConv(
+=======
         self.channels = {2 ** l_number: self.__nf(l_number, fmap_base, fmap_decay, fmap_min, fmap_max) for l_number in
                          range(start_res_log, resol_log + 1)}
 
         self.input = ConstantInput(self.channels[start_resolution])
 
         self.conv_1 = StyledConv2d(
+>>>>>>> main
             self.channels[start_resolution],
             self.channels[start_resolution],
             kernel_size=3,
@@ -364,7 +473,11 @@ class Generator(nn.Module):
             )
 
             self.convs.append(
+<<<<<<< HEAD
+                StyledConv(
+=======
                 StyledConv2d(
+>>>>>>> main
                     in_channels,
                     out_channels,
                     kernel_size=3,
@@ -375,7 +488,11 @@ class Generator(nn.Module):
             )
 
             self.convs.append(
+<<<<<<< HEAD
+                StyledConv(
+=======
                 StyledConv2d(
+>>>>>>> main
                     out_channels,
                     out_channels,
                     kernel_size=3,
@@ -388,6 +505,8 @@ class Generator(nn.Module):
             in_channels = out_channels
         pass
 
+<<<<<<< HEAD
+=======
     def __call__(self,
                  return_latents=False,
                  truncation=None,
@@ -404,6 +523,7 @@ class Generator(nn.Module):
                             noise=noise,
                             randomize_noise=randomize_noise)
 
+>>>>>>> main
     def create_noise(self):
         device = self.input.output.device
         noises = [torch.randn(1, 1, self.start_resol, self.start_resol, device=device)]
@@ -459,7 +579,11 @@ class Generator(nn.Module):
             if inject_index is None:
                 inject_index = random.randint(1, self.num_latent - 1)
             latent = styles[0].unsqueeze(1).repeat(1, inject_index, 1)
+<<<<<<< HEAD
+            latent_2 = styles[1].unsqueeze(1).repear(1, self.num_latent - inject_index, 1)
+=======
             latent_2 = styles[1].unsqueeze(1).repeat(1, self.num_latent - inject_index, 1)
+>>>>>>> main
 
             latent = torch.cat([latent, latent_2], 1)
 
